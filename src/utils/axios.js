@@ -8,4 +8,11 @@ const instance = axios.create({
 	}
 });
 
+// Middleware на отправку токена во всех запросах
+instance.interceptors.request.use((config) => {
+	config.headers.Authorization = window.localStorage.getItem("Simple_Blog_Token");
+
+	return config;
+});
+
 export default instance;
