@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
@@ -6,10 +6,16 @@ import SimpleMDE from "react-simplemde-editor";
 
 import "easymde/dist/easymde.min.css";
 import styles from "./AddPost.module.scss";
+import { useSelector } from "react-redux";
+import { selectIsAuth } from "../../redux/slices/auth";
+import { Navigate } from "react-router-dom";
 
 export const AddPost = () => {
+  const isAuth = useSelector(selectIsAuth);
   const imageUrl = "";
   const [value, setValue] = React.useState("");
+  const [title, setTitle] = useState("");
+  const [tags, setTags] = useState("");
 
   const handleChangeFile = () => {};
 
@@ -33,6 +39,10 @@ export const AddPost = () => {
     }),
     []
   );
+
+  if (!window.localStorage.getItem("token") && !isAuth) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Paper style={{ padding: 30 }}>
@@ -58,12 +68,20 @@ export const AddPost = () => {
         classes={{ root: styles.title }}
         variant="standard"
         placeholder="Заголовок статьи..."
+        value={title}
+        onChange={(e) => {
+          setTitle(e.target.value);
+        }}
         fullWidth
       />
       <TextField
         classes={{ root: styles.tags }}
         variant="standard"
         placeholder="Тэги"
+        value={tags}
+        onChange={(e) => {
+          setTags(e.target.value);
+        }}
         fullWidth
       />
       <SimpleMDE
