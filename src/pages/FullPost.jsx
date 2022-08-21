@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 import { Post } from "../components/Post";
 import { Index } from "../components/AddComment";
@@ -16,13 +17,13 @@ export const FullPost = () => {
       .get(`/posts/${id}`)
       .then((response) => {
         setData(response.data);
+        console.log("data", data);
         setIsLoading(false);
       })
       .catch((error) => {
         console.error("Ошибка при получении статьи", error);
       });
   }, []);
-
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
@@ -32,7 +33,7 @@ export const FullPost = () => {
       <Post
         id={data._id}
         title={data.title}
-        imageUrl={data.imageUrl}
+        imageUrl={`http://localhost:3010${data.imageUrl}`}
         user={data.user}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}
@@ -40,7 +41,7 @@ export const FullPost = () => {
         tags={data.tags}
         isFullPost
       >
-        <p>{data.text}</p>
+        <ReactMarkdown children={data.text} />
       </Post>
       <CommentsBlock
         items={[
